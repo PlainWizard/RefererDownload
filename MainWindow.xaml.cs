@@ -18,9 +18,11 @@ namespace RefererDownload
         public MainWindow()
         {
             InitializeComponent();
-            Txt_dir.Text = Environment.CurrentDirectory;
+            pathdir= Environment.CurrentDirectory;
+            Txt_dir.Text = pathdir;
             Init();
         }
+        string pathdir = "";
         string filename = "";
         private void Button_Click_Dir(object sender, RoutedEventArgs e)
         {
@@ -31,7 +33,10 @@ namespace RefererDownload
             };
             if (dialog.ShowDialog().GetValueOrDefault())
             {
-                Txt_dir.Text = dialog.FileName;
+                var f = new FileInfo(dialog.FileName);
+                pathdir = f.DirectoryName;
+                filename = f.Name;
+                Txt_dir.Text = f.FullName;
             }
         }
 
@@ -50,11 +55,17 @@ namespace RefererDownload
                     Txt_url.Text = arr[0];
                     Txt_ref.Text = arr[1];
                     Txt_dir.Text = arr[2];
+                    var f = new FileInfo(arr[2]);
+                    pathdir = f.DirectoryName;
+                    filename = f.Name;
                 }
                 else
                 {
                     string str = $"{Txt_url.Text};{Txt_ref.Text};{Txt_dir.Text}";
                     File.WriteAllText(Path.Combine(Config.AppDataPath, "config.data"), str);
+                    var f = new FileInfo(Txt_dir.Text);
+                    pathdir = f.DirectoryName;
+                    filename = f.Name;
                 }
             }
             catch { }
@@ -156,12 +167,17 @@ namespace RefererDownload
         private void Txt_url_TextChanged(object sender, TextChangedEventArgs e)
         {
             //filename*=UTF-8''mmexport1616406087249.jpg&
-            var u = Regex.Match(UrlEncode(Txt_url.Text), "filename.{1,9}([^']+?)&");
+            var str = UrlEncode(Txt_url.Text);
+            var u = Regex.Match(str, "filename.{1,9}([^']+?)&");
             if (u.Success)
             {
                 filename = u.Groups[1].Value;
-                Txt_dir.Text = Path.Combine(Environment.CurrentDirectory, filename);
             }
+            else
+            {
+                filename = str.Substring(str.LastIndexOf("/") + 1);
+            }
+            Txt_dir.Text = Path.Combine(pathdir, filename);
         }
 
         private void Button_Click_OpenDir(object sender, RoutedEventArgs e)
