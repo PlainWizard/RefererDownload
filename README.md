@@ -32,6 +32,10 @@ bug反馈群476304388
 
 ## 相关链接
 
+- [阿里云盘Windows客户端](https://pan.wyfxw.cn/plainwizard/aliyundrive-Client-CSharp.exe)
+
+- [FAP文件在线分享](https://file.wyfxw.cn/)
+
 - [阿里云盘公测地址](https://www.aliyundrive.com/apply)
 
 将阿里云多年企业服务的技术积累与沉淀，服务于个人用户，携手用户进入更快、更安全、更流畅、更智能的个人云时代。
