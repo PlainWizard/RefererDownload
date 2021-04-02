@@ -1,16 +1,15 @@
 # RefererDownload
-Referer防盗链下载器
+Referer防盗链下载器,
 使用指定的Referer下载文件
 
 ## 概述
 
 阿里云盘渐离初心,变得不那么方便了,
-通过去掉Referer已经无法实现下载文件了
-需要来至允许的Referer才能下载
-意味着已经无法直接从前端下载了
-插件扩展什么的也麻烦,索性直接做一个下载器
-RefererDownload.exe大小17kb可以接受
-使用指定Referer下载文件
+通过去掉Referer已经无法实现下载文件了,
+需要来至允许的Referer白名单域名才能下载,
+意味着已经无法直接从前端下载了,
+插件扩展什么的也麻烦,索性直接做一个下载器,
+RefererDownload.exe大小17kb可以接受.
 ```
 <?xml version="1.0" encoding="UTF-8"?>
 <Error>
@@ -20,13 +19,14 @@ RefererDownload.exe大小17kb可以接受
   <HostId>bj29.cn-beijing.data.alicloudccp.com</HostId>
 </Error>
 ```
+bug反馈群476304388
 
 ## 运行环境
 - .NET Framework 4.6
 
 ## 成品
 
-编译好成品放在云盘欢迎下载体验云盘下载
+编译好成品直接下载使用,也可自己下载源码编译
 
 - [下载客户端体验](https://pan.wyfxw.cn/plainwizard/RefererDownload.exe)
 

@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:RefererDownload"
         mc:Ignorable="d"
-        Title="RefererDownload-防盗链下载-https://github.com/PlainWizard/RefererDownload" Height="450" Width="800">
+        Title="RefererDownload-bug反馈群476304388-https://github.com/PlainWizard/RefererDownload" Height="450" Width="800">
     <Grid>
         <Grid x:Name="app">
             <Grid.RowDefinitions>

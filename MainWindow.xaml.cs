@@ -53,14 +53,23 @@ namespace RefererDownload
                 }
                 else
                 {
-                    string str=$"{Txt_url.Text};{Txt_ref.Text};{Txt_dir.Text}";
-                    File.WriteAllText(Path.Combine(Config.AppDataPath, "config.data"),str);
+                    string str = $"{Txt_url.Text};{Txt_ref.Text};{Txt_dir.Text}";
+                    File.WriteAllText(Path.Combine(Config.AppDataPath, "config.data"), str);
                 }
             }
             catch { }
         }
         void DownFile(string address, string fileName)
         {
+            if (File.Exists(fileName))
+            {
+                var r = MessageBox.Show("文件已存在,是否替换?", "操作提示", MessageBoxButton.YesNo, MessageBoxImage.Information);
+                if (r != MessageBoxResult.Yes)
+                {
+                    Txb_tip.Text = "取消替换下载,清修改文件名";
+                    return;
+                }
+            }
             app.IsEnabled = false;
             using (WebClient c = new WebClient())
             {
