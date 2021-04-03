@@ -12,6 +12,9 @@ namespace RefererDownload
 {
     /// <summary>
     /// MainWindow.xaml 的交互逻辑
+    /// PlainWizard
+    /// https://github.com/PlainWizard/RefererDownload
+    /// Bug反馈群:476304388
     /// </summary>
     public partial class MainWindow : Window
     {
@@ -21,6 +24,22 @@ namespace RefererDownload
             pathdir= Environment.CurrentDirectory;
             Txt_dir.Text = pathdir;
             Init();
+            var args = Environment.GetCommandLineArgs();
+            if (args.Length > 2) InitUrlArg(args[1], args[2]);
+        }
+        public MainWindow(string url,string referer) : this()
+        {
+            InitUrlArg(url, referer);
+        }
+        void InitUrlArg(string url, string referer)
+        {
+            if (!string.IsNullOrEmpty(url))
+            {
+                var r = Regex.Match(Regex.Replace(url, "\\s+$", ""), "\\S+$");
+                if (r.Success) url = r.Value;
+                Txt_url.Text = url;
+            }
+            Txt_ref.Text = referer;
         }
         string pathdir = "";
         string filename = "";
@@ -31,13 +50,7 @@ namespace RefererDownload
                 Filter = "All Files|*.*",
                 FileName = filename
             };
-            if (dialog.ShowDialog().GetValueOrDefault())
-            {
-                var f = new FileInfo(dialog.FileName);
-                pathdir = f.DirectoryName;
-                filename = f.Name;
-                Txt_dir.Text = f.FullName;
-            }
+            if (dialog.ShowDialog().GetValueOrDefault()) Txt_dir.Text = dialog.FileName;
         }
 
         private void Button_Click_Down(object sender, RoutedEventArgs e)
@@ -48,27 +61,36 @@ namespace RefererDownload
         {
             try
             {
+                var dir = Path.Combine(Config.AppDataPath, "config.data");
                 if (Txt_url.Text == "")
                 {
-                    var str = File.ReadAllText(Path.Combine(Config.AppDataPath, "config.data"));
+                    var str = File.ReadAllText(dir);
                     var arr = str.Split(';');
                     Txt_url.Text = arr[0];
                     Txt_ref.Text = arr[1];
                     Txt_dir.Text = arr[2];
-                    var f = new FileInfo(arr[2]);
-                    pathdir = f.DirectoryName;
-                    filename = f.Name;
                 }
                 else
                 {
                     string str = $"{Txt_url.Text};{Txt_ref.Text};{Txt_dir.Text}";
-                    File.WriteAllText(Path.Combine(Config.AppDataPath, "config.data"), str);
-                    var f = new FileInfo(Txt_dir.Text);
-                    pathdir = f.DirectoryName;
-                    filename = f.Name;
+                    File.WriteAllText(dir, str);
                 }
             }
             catch { }
+        }
+        void ChangeStatus(bool IsEnabled=true)
+        {
+            if (IsEnabled)
+            {
+                app.IsEnabled = true;
+                FunStop = null;
+                Btn_Stop.Visibility = Visibility.Hidden;
+            }
+            else
+            {
+                app.IsEnabled = false;
+                Btn_Stop.Visibility = Visibility.Visible;
+            }
         }
         void DownFile(string address, string fileName)
         {
@@ -81,7 +103,7 @@ namespace RefererDownload
                     return;
                 }
             }
-            app.IsEnabled = false;
+            ChangeStatus(false);
             using (WebClient c = new WebClient())
             {
                 try
@@ -115,9 +137,7 @@ namespace RefererDownload
                             Txb_tip.Text = "下载完成";
                             Init();
                         }
-                        Btn_Stop.Visibility = Visibility.Hidden;
-                        FunStop = null;
-                        app.IsEnabled = true;
+                        ChangeStatus();
                     };
                     FunStop = () =>
                     {
@@ -131,13 +151,15 @@ namespace RefererDownload
                 {
                     while (ex.InnerException != null) ex = ex.InnerException;
                     Txb_tip.Text = ex.Message;
-                    app.IsEnabled = true;
+                    ChangeStatus();
                 }
             }
-
         }
         /// <summary>
-        /// wpf解码UrlEncode
+        /// wpf解码
+        /// PlainWizard
+        /// https://github.com/PlainWizard/RefererDownload
+        /// Bug反馈群:476304388
         /// </summary>
         /// <param name="str"></param>
         /// <returns></returns>
@@ -146,7 +168,7 @@ namespace RefererDownload
             try
             {
                 List<byte> bs = new List<byte>();
-                byte[] byStr = Encoding.UTF8.GetBytes(str); //默认是System.Text.Encoding.Default.GetBytes(str)
+                byte[] byStr = Encoding.UTF8.GetBytes(str);
                 for (int i = 0; i < byStr.Length; i++)
                 {
                     byte b = byStr[i];
@@ -175,9 +197,18 @@ namespace RefererDownload
             }
             else
             {
-                filename = str.Substring(str.LastIndexOf("/") + 1);
+                var r = Regex.Match(Regex.Replace(str, "\\s+$",""), "\\S+$");
+                if (r.Success) filename = r.Value;
+                filename = filename.Substring(filename.LastIndexOfAny(new char[] { '/', '\\' }) + 1);
             }
-            Txt_dir.Text = Path.Combine(pathdir, filename);
+            try
+            {
+                Txt_dir.Text = Path.Combine(pathdir, filename);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
 
         private void Button_Click_OpenDir(object sender, RoutedEventArgs e)
@@ -195,6 +226,29 @@ namespace RefererDownload
         private void Button_Click_Stop(object sender, RoutedEventArgs e)
         {
             FunStop?.Invoke();
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            if (Clipboard.ContainsText())
+            {
+                var str = Clipboard.GetText();
+                var r = Regex.Match(Regex.Replace(str, "\\s+$", ""), "\\S+$");
+                if (r.Success) str = r.Value;
+                Txt_url.Text = str;
+            }
+        }
+
+        private void Txt_dir_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            try
+            {
+                var f = new FileInfo(Txt_dir.Text);
+                pathdir = f.DirectoryName;
+                filename = f.Name;
+
+            }
+            catch { }
         }
     }
 }

@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:RefererDownload"
         mc:Ignorable="d"
-        Title="RefererDownload-bug反馈群476304388-https://github.com/PlainWizard/RefererDownload" Height="450" Width="800">
+        Title="RefererDownload-Bug反馈群:476304388-https://github.com/PlainWizard/RefererDownload" Height="450" Width="800">
     <Grid>
         <Grid x:Name="app">
             <Grid.RowDefinitions>
@@ -18,16 +18,27 @@
                 <RowDefinition/>
             </Grid.RowDefinitions>
             <Grid Grid.RowSpan="3">
-                <TextBox x:Name="Txt_url" TextWrapping="Wrap" TextChanged="Txt_url_TextChanged"
-                 AcceptsReturn="True" VerticalScrollBarVisibility="Visible" />
-                <TextBlock Opacity=".3" IsHitTestVisible="False" VerticalAlignment="Center" HorizontalAlignment="Center">下载链接,防盗链URL</TextBlock>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Grid Grid.RowSpan="3">
+                    <TextBox x:Name="Txt_url" TextWrapping="Wrap" TextChanged="Txt_url_TextChanged" AcceptsReturn="True" VerticalScrollBarVisibility="Visible" />
+                </Grid>
+                <Grid Grid.RowSpan="2">
+                    <TextBlock Opacity=".3" IsHitTestVisible="False" VerticalAlignment="Center" HorizontalAlignment="Center">下载链接,防盗链URL</TextBlock>
+                </Grid>
+                <Grid Grid.Row="2">
+                    <Button Content="粘贴" Opacity=".5" Click="Button_Click" />
+                </Grid>
             </Grid>
             <Grid Grid.Row="3" Grid.RowSpan="2">
                 <Grid.RowDefinitions>
                     <RowDefinition/>
                     <RowDefinition/>
                 </Grid.RowDefinitions>
-                <TextBox Grid.RowSpan="2" x:Name="Txt_dir" TextWrapping="Wrap"
+                <TextBox Grid.RowSpan="2" x:Name="Txt_dir" TextChanged="Txt_dir_TextChanged" TextWrapping="Wrap"
                  AcceptsReturn="True" VerticalScrollBarVisibility="Visible" />
                 <Button Content="选择文件夹" Opacity=".5" Click="Button_Click_Dir" />
                 <Button Grid.Row="1" Content="打开文件夹" Opacity=".5" Click="Button_Click_OpenDir" />
@@ -45,5 +56,5 @@
         </Grid>
         <Button x:Name="Btn_Stop" Visibility="Hidden" Content="停止"  Click="Button_Click_Stop" />
 
-    </Grid> 
+    </Grid>
 </Window>
